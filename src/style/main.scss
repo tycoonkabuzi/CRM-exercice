@@ -12,7 +12,6 @@ body {
     text-align: center;
   }
   ul {
-    background-color: red;
     width: 20%;
     margin: auto;
   }
@@ -22,6 +21,15 @@ body {
     margin: auto;
     gap: 10px;
     padding: 100px;
+
+    .message {
+      background-color: rgb(23, 151, 9);
+      padding: 10px;
+      color: white;
+      p {
+        text-align: center;
+      }
+    }
 
     .label-addCustomer {
       width: 50px;
@@ -45,6 +53,21 @@ body {
       color: white;
       border: none;
     }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  th,
+  td {
+    border: 1px solid #333;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
   }
 }
 .main-nav {
