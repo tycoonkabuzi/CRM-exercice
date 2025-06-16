@@ -1,0 +1,69 @@
+body {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  padding: 0;
+  margin: 0;
+}
+.main {
+  margin: auto;
+  width: 80%;
+  h1 {
+    text-align: center;
+  }
+  ul {
+    background-color: red;
+    width: 20%;
+    margin: auto;
+  }
+  .form-addCustomer {
+    align-items: center;
+    width: 35%;
+    margin: auto;
+    gap: 10px;
+    padding: 100px;
+
+    .label-addCustomer {
+      width: 50px;
+    }
+    input {
+      width: 100%;
+      height: 25px;
+    }
+
+    .tax-input {
+      width: 57%;
+    }
+    .address {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background-color: rgb(45, 149, 224);
+      width: 100px;
+      height: 40px;
+      color: white;
+      border: none;
+    }
+  }
+}
+.main-nav {
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 100px;
+  padding-right: 100px;
+  h1 {
+    font-size: 20px;
+    font-weight: 800;
+  }
+  ul {
+    display: flex;
+    gap: 10px;
+
+    li {
+      list-style: none;
+    }
+  }
+}
