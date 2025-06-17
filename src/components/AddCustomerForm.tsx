@@ -2,11 +2,13 @@ import { useState } from "react";
 import "../style/main.scss";
 import axios from "axios";
 const AddCustomerForm = () => {
+  const [isPassed, setIsPassed] = useState(true);
   const [message, setMessage] = useState({
     status: false,
     message: "",
     color: "",
   });
+
   const [dataToBeAdded, setDataToBeAdded] = useState({
     address: {
       street: "",
@@ -20,6 +22,7 @@ const AddCustomerForm = () => {
   const handleForm = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+
     setDataToBeAdded((prev) => {
       const key = name.split("."); // we split the name into two elements of an array it will look like eg: ["address","street"]
       if (key.length == 1) {
@@ -30,18 +33,23 @@ const AddCustomerForm = () => {
       return { ...prev, [parent]: { ...prev[parent], [child]: value } }; // here we create a logic, saying that the parent will be created as an object name.
     });
   };
-  console.log(dataToBeAdded);
+
   const AddCustomer = async () => {
     try {
       const response = await axios.post(
         "http://localhost:8080/customers",
         dataToBeAdded
       );
-      setMessage((prev) => ({
-        ...prev,
-        status: true,
-        message: " Successfully added",
-      }));
+
+      setDataToBeAdded({
+        address: {
+          street: "",
+          number: "",
+          postCode: "",
+        },
+        name: "",
+        taxId: "",
+      });
     } catch (error) {
       console.log(error);
       setMessage((prev) => ({
@@ -55,32 +63,132 @@ const AddCustomerForm = () => {
     <div className="main">
       <form className="form-addCustomer">
         {message.status ? (
-          <div className="message">
-            <h1>Message</h1> <p> {message.message}</p>
+          <div className="message" style={{ backgroundColor: message.color }}>
+            <h1>{message.color === "red" ? "Error" : "Message"}</h1>{" "}
+            <p> {message.message}</p>
           </div>
         ) : (
           ""
         )}
         <h1>Add Customer</h1>
         <label className="label-addCustomer">Name:</label>
-        <input type="text" name="name" onChange={handleForm} />
+        <input
+          type="text"
+          name="name"
+          value={dataToBeAdded.name}
+          onChange={handleForm}
+        />
         <label>tax-id:</label>
-        <input type="text" name="taxId" onChange={handleForm} />
+        <input
+          type="text"
+          name="taxId"
+          value={dataToBeAdded.taxId}
+          onChange={handleForm}
+        />
         <h2>Address</h2>
         <div className="address">
           <label className="label-addCustomer">street:</label>
-          <input type="text" name="address.street" onChange={handleForm} />
+          <input
+            type="text"
+            name="address.street"
+            value={dataToBeAdded.address.street}
+            onChange={handleForm}
+          />
           <label className="label-addCustomer">number:</label>
-          <input type="text" name="address.number" onChange={handleForm} />
+          <input
+            type="text"
+            name="address.number"
+            value={dataToBeAdded.address.number}
+            onChange={handleForm}
+          />
           <label className="label-addCustomer">code:</label>
-          <input type="text" name="address.postCode" onChange={handleForm} />
+          <input
+            type="text"
+            name="address.postCode"
+            value={dataToBeAdded.address.postCode}
+            onChange={handleForm}
+          />
         </div>
         <br /> <br />
         <button
           className="btn"
           onClick={(e) => {
             e.preventDefault();
-            AddCustomer();
+            switch (isPassed) {
+              case dataToBeAdded.name === "" &&
+                dataToBeAdded.taxId === "" &&
+                dataToBeAdded.address.street === "" &&
+                dataToBeAdded.address.number === "" &&
+                dataToBeAdded.address.postCode === "":
+                setMessage((prev) => ({
+                  ...prev,
+                  status: true,
+                  message:
+                    "None of the field is completed, it is impossible to submit",
+                  color: "red",
+                }));
+                setIsPassed(true);
+                break;
+              case dataToBeAdded.name === "":
+                setMessage((prev) => ({
+                  ...prev,
+                  status: true,
+                  message: "The name field should not be Empty",
+                  color: "red",
+                }));
+                setIsPassed(true);
+                break;
+              case dataToBeAdded.taxId === "" || null:
+                setMessage((prev) => ({
+                  ...prev,
+                  status: true,
+                  message: "The tax Id field should not be Empty",
+                  color: "red",
+                }));
+                setIsPassed(true);
+                break;
+
+              case dataToBeAdded.address.street === "":
+                setMessage((prev) => ({
+                  ...prev,
+                  status: true,
+                  message: "The street field is empty kindly fill it",
+                  color: "red",
+                }));
+                setIsPassed(true);
+                break;
+              case dataToBeAdded.address.postCode === "":
+                setMessage((prev) => ({
+                  ...prev,
+
+                  message: "The post field is empty kindly fill it",
+                  color: "red",
+                }));
+                setIsPassed(true);
+                break;
+
+              case dataToBeAdded.address.number === "":
+                setMessage((prev) => ({
+                  ...prev,
+                  status: true,
+                  message: "what is the number of your apartement ?",
+                  color: "red",
+                }));
+                setIsPassed(true);
+                break;
+
+              default:
+                setMessage((prev) => ({
+                  ...prev,
+                  status: true,
+                  color: "green",
+                  message: " Successfully added",
+                }));
+
+                AddCustomer();
+                setIsPassed(true);
+                break;
+            }
           }}
         >
           Submit

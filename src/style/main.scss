@@ -1,3 +1,34 @@
+@keyframes messageAnimation {
+  0% {
+    rotate: -5deg;
+    transform: scale(0.1);
+  }
+  30% {
+    rotate: 5deg;
+  }
+  40% {
+    rotate: -5deg;
+  }
+  50% {
+    rotate: 5deg;
+  }
+  60% {
+    rotate: -5deg;
+  }
+  70% {
+    rotate: 5deg;
+  }
+  80% {
+    rotate: -5deg;
+  }
+  90% {
+    rotate: 5deg;
+  }
+
+  100% {
+    rotate: 0deg;
+  }
+}
 body {
   font-family: "Urbanist", sans-serif;
   font-optical-sizing: auto;
@@ -26,6 +57,7 @@ body {
       background-color: rgb(23, 151, 9);
       padding: 10px;
       color: white;
+      animation: messageAnimation 0.3s ease-in-out forwards;
       p {
         text-align: center;
       }
@@ -88,5 +120,12 @@ body {
     li {
       list-style: none;
     }
+  }
+}
+.link {
+  text-decoration: none;
+  color: black;
+  &:hover {
+    color: rgb(34, 88, 81);
   }
 }
