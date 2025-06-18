@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const SingleCustomer = () => {
   const [data, setData] = useState();
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getSingleCustomer = async () => {
@@ -54,20 +56,31 @@ const SingleCustomer = () => {
         </div>
 
         <br />
-        <button className="btn">Add Action</button>
+        <button
+          onClick={() => {
+            navigate(`/actions/${data._id}`);
+          }}
+          className="btn"
+        >
+          Add Action
+        </button>
       </div>
 
       <h2>Actions</h2>
       <table>
-        <thead>
-          <tr>
-            <th>N</th>
-            <th>Date</th>
-            <th>Contact type</th>
-            <th>Description</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+        {data.actions.length != 0 ? (
+          <thead>
+            <tr>
+              <th>N</th>
+              <th>Date</th>
+              <th>Contact type</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+        ) : (
+          <p style={{ textAlign: "center" }}> You have no actions</p>
+        )}
         <tbody>
           {data.actions
             ? data.actions.map((action) => (

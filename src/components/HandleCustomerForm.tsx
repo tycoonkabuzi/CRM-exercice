@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../style/main.scss";
 import axios from "axios";
-const AddCustomerForm = () => {
+const HandleCustomerForm = () => {
   const [isPassed, setIsPassed] = useState(true);
   const [message, setMessage] = useState({
     status: false,
@@ -36,10 +36,7 @@ const AddCustomerForm = () => {
 
   const AddCustomer = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/customers",
-        dataToBeAdded
-      );
+      await axios.post("http://localhost:8080/customers", dataToBeAdded);
 
       setDataToBeAdded({
         address: {
@@ -198,4 +195,4 @@ const AddCustomerForm = () => {
   );
 };
 
-export default AddCustomerForm;
+export default HandleCustomerForm;
