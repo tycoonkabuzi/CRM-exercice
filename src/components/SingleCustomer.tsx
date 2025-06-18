@@ -25,7 +25,19 @@ const SingleCustomer = () => {
   if (!data) {
     return <div>Loading...</div>;
   }
-  console.log(data);
+
+  // transform long date numerical to local date
+
+  const formatDate = (toBeFormated) => {
+    const date = new Date(toBeFormated);
+    const formated = date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    return formated;
+  };
   return (
     <div className="main">
       <div>
@@ -40,6 +52,9 @@ const SingleCustomer = () => {
             <li>post-code: {data.address.postCode}</li>
           </ul>
         </div>
+
+        <br />
+        <button className="btn">Add Action</button>
       </div>
 
       <h2>Actions</h2>
@@ -47,60 +62,27 @@ const SingleCustomer = () => {
         <thead>
           <tr>
             <th>N</th>
-            <th>Contact Type</th>
+            <th>Date</th>
+            <th>Contact type</th>
             <th>Description</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Monday, 12 March 2025</td>
-            <td>
-              I am the one I am and I am writting this as an example and nothing
-              else
-            </td>
-            <td>
-              <button>Edit</button>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>Monday, 12 March 2025</td>
-            <td>
-              I am the one I am and I am writting this as an example and nothing
-              else
-            </td>
-            <td>
-              <button>Edit</button>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>Monday, 12 March 2025</td>
-            <td>
-              I am the one I am and I am writting this as an example and nothing
-              else
-            </td>
-            <td>
-              <button>Edit</button>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>Monday, 12 March 2025</td>
-            <td>
-              I am the one I am and I am writting this as an example and nothing
-              else
-            </td>
-            <td>
-              <button>Edit</button>
-              <button>Delete</button>
-            </td>
-          </tr>
+          {data.actions
+            ? data.actions.map((action) => (
+                <tr>
+                  <td>{data.actions.indexOf(action) + 1}</td>
+                  <td>{formatDate(action.contactDate)}</td>
+                  <td>{action.typeOfAction}</td>
+                  <td>{action.description}</td>
+                  <td>
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </td>
+                </tr>
+              ))
+            : "Loading"}
         </tbody>
       </table>
     </div>

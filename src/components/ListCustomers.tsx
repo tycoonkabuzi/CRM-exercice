@@ -22,12 +22,11 @@ const ListCustomers = () => {
       <ul>
         {customers
           ? customers.map((customer) => (
-              <button
-                onClick={() => navigate(`${customer.id}`)}
-                key={customer._id}
-              >
-                {customer.name}
-              </button>
+              <li>
+                <Link to={`customer/${customer._id}`} key={customer._id}>
+                  {customer.name}
+                </Link>
+              </li>
             ))
           : ""}
       </ul>
