@@ -44,7 +44,9 @@ const HandleActionForm = () => {
         <label>Description:</label>
         <textarea name="description" onChange={handleData} />
         <br /> <br />
-        <button className="btn">Add action</button>
+        <button className="btn" onClick={addAction}>
+          Add action
+        </button>
       </form>
     </div>
   );

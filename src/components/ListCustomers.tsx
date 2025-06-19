@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ListCustomers = () => {
-  const navigate = useNavigate();
   const [customers, setCustomers] = useState();
 
   useEffect(() => {
@@ -22,11 +21,21 @@ const ListCustomers = () => {
       <ul>
         {customers
           ? customers.map((customer) => (
-              <li>
-                <Link to={`customer/${customer._id}`} key={customer._id}>
-                  {customer.name}
-                </Link>
-              </li>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <li style={{ width: "55%" }}>
+                  <Link to={`customer/${customer._id}`} key={customer._id}>
+                    {customer.name}
+                  </Link>
+                </li>
+                <button>Edit </button>
+                <button>Delete </button>
+              </div>
             ))
           : ""}
       </ul>

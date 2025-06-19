@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const SingleCustomer = () => {
   const [data, setData] = useState();
   const { id } = useParams();
+  const [triggerClick, setTriggerClick] = useState(false);
 
   const navigate = useNavigate();
 
@@ -22,12 +23,19 @@ const SingleCustomer = () => {
     };
 
     getSingleCustomer();
-  }, [id]);
+  }, [id, triggerClick]);
 
   if (!data) {
     return <div>Loading...</div>;
   }
 
+  const deleteAction = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/actions/${id}`);
+    } catch (error) {
+      console.log("something went wrong, impossible to delete", error);
+    }
+  };
   // transform long date numerical to local date
 
   const formatDate = (toBeFormated) => {
@@ -83,15 +91,22 @@ const SingleCustomer = () => {
         )}
         <tbody>
           {data.actions
-            ? data.actions.map((action) => (
+            ? data.actions.map((action, index) => (
                 <tr>
-                  <td>{data.actions.indexOf(action) + 1}</td>
+                  <td>{index + 1}</td>
                   <td>{formatDate(action.contactDate)}</td>
                   <td>{action.typeOfAction}</td>
                   <td>{action.description}</td>
                   <td>
                     <button>Edit</button>
-                    <button>Delete</button>
+                    <button
+                      onClick={() => {
+                        setTriggerClick(!triggerClick);
+                        deleteAction(action._id);
+                      }}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))
