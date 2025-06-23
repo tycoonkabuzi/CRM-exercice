@@ -98,7 +98,11 @@ const SingleCustomer = () => {
                   <td>{action.typeOfAction}</td>
                   <td>{action.description}</td>
                   <td>
-                    <button>Edit</button>
+                    <button
+                      onClick={() => navigate(`/action/edit/${action._id}`)}
+                    >
+                      Edit
+                    </button>
                     <button
                       onClick={() => {
                         setTriggerClick(!triggerClick);

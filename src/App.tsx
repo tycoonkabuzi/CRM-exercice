@@ -16,6 +16,7 @@ function App() {
           <Route path="add" element={<HandleCustomerForm />} />
           <Route path="customer/:id" element={<SingleCustomer />} />
           <Route path="actions/:id" element={<HandleActionForm />} />
+          <Route path="action/edit/:id" element={<HandleActionForm />} />
         </Route>
       </Routes>
     </>
