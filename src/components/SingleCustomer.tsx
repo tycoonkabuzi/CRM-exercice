@@ -2,10 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const SingleCustomer = () => {
+const SingleCustomer = ({ triggerClick, setTriggerClick }) => {
   const [data, setData] = useState();
   const { id } = useParams();
-  const [triggerClick, setTriggerClick] = useState(false);
 
   const navigate = useNavigate();
 

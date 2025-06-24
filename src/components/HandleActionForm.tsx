@@ -1,19 +1,21 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const HandleActionForm = () => {
   const location = useLocation();
   const rawPath = location.pathname.split("/");
+  const params = useParams();
   const singleActionId = rawPath[3];
-  console.log(singleActionId);
+
+  const navigate = useNavigate();
 
   const [actionToBeAdded, setActionToBeAdded] = useState({
+    customer: "",
     contactDate: "",
     typeOfAction: "",
     description: " ",
   });
-  const { id } = useParams();
 
   const handleData = (e) => {
     const name = e.target.name;
@@ -27,10 +29,11 @@ const HandleActionForm = () => {
           `http://localhost:8080/actions/${singleActionId}`
         );
         const data = response.data;
-        console.log(data);
+
         if (data) {
           setActionToBeAdded((prev) => ({
             ...prev,
+            customer: data.customer,
             contactDate: data.contactDate,
             typeOfAction: data.typeOfAction,
             description: data.description,
@@ -42,11 +45,12 @@ const HandleActionForm = () => {
     };
     getSingleAction();
   }, []);
+  console.log(actionToBeAdded.customer);
   const addAction = async () => {
-    const dataToSend = { ...actionToBeAdded, customer: id };
+    const dataToSend = { ...actionToBeAdded, customer: params.id };
     try {
       await axios.post(`http://localhost:8080/actions`, dataToSend);
-      console.log("Successfully added ");
+      navigate(`/customer/${params.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -54,18 +58,18 @@ const HandleActionForm = () => {
 
   const editAction = async () => {
     try {
-      const dataToSend = { ...actionToBeAdded, customer: id };
-
+      const dataToSend = { ...actionToBeAdded };
+      console.log(dataToSend);
       await axios.put(
         `http://localhost:8080/actions/${singleActionId}`,
         dataToSend
       );
-      console.log("Edited successfully");
+      await navigate(`/customer/${actionToBeAdded.customer}`);
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log(actionToBeAdded.customer);
   return (
     <div className="main">
       <form className="form-addCustomer" style={{ width: "80%" }}>
@@ -112,7 +116,13 @@ const HandleActionForm = () => {
             Save
           </button>
         ) : (
-          <button className="btn" onClick={addAction}>
+          <button
+            className="btn"
+            onClick={(e) => {
+              e.preventDefault();
+              addAction();
+            }}
+          >
             Add action
           </button>
         )}

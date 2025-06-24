@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/main.scss";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const HandleCustomerForm = () => {
   const [isPassed, setIsPassed] = useState(true);
   const [message, setMessage] = useState({
@@ -19,6 +20,7 @@ const HandleCustomerForm = () => {
     taxId: "",
   });
 
+  const navigate = useNavigate();
   const handleForm = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -47,6 +49,7 @@ const HandleCustomerForm = () => {
         name: "",
         taxId: "",
       });
+      navigate("/");
     } catch (error) {
       console.log(error);
       setMessage((prev) => ({
