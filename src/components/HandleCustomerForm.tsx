@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import "../style/main.scss";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-const HandleCustomerForm = () => {
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   const [isPassed, setIsPassed] = useState(true);
   const [message, setMessage] = useState({
     status: false,
     message: "",
     color: "",
   });
+
+  const location = useLocation();
+  const rawPath = location.pathname.split("/");
+  console.log(rawPath);
 
   const [dataToBeAdded, setDataToBeAdded] = useState({
     address: {
@@ -21,6 +25,8 @@ const HandleCustomerForm = () => {
   });
 
   const navigate = useNavigate();
+
+  const { id } = useParams();
   const handleForm = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -36,7 +42,7 @@ const HandleCustomerForm = () => {
     });
   };
 
-  const AddCustomer = async () => {
+  const addCustomer = async () => {
     try {
       await axios.post("http://localhost:8080/customers", dataToBeAdded);
 
@@ -59,6 +65,40 @@ const HandleCustomerForm = () => {
     }
   };
 
+  useEffect(() => {
+    const getSingleCustomer = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/customers/${id}`
+        );
+        const data = response.data;
+        if (data) {
+          setDataToBeAdded((prev) => ({
+            ...prev,
+            address: {
+              street: data.address.street,
+              number: data.address.number,
+              postCode: data.address.postCode,
+            },
+            name: data.name,
+            taxId: data.taxId,
+          }));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getSingleCustomer();
+  }, []);
+
+  const editCustomer = (customerId) => {
+    try {
+      axios.put(`http://localhost:8080/customers/${customerId}`, dataToBeAdded);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="main">
       <form className="form-addCustomer">
@@ -70,19 +110,19 @@ const HandleCustomerForm = () => {
         ) : (
           ""
         )}
-        <h1>Add Customer</h1>
+        {rawPath[1] === "edit" ? <h1>Edit Customer</h1> : <h1>Add Customer</h1>}
         <label className="label-addCustomer">Name:</label>
         <input
           type="text"
           name="name"
-          value={dataToBeAdded.name}
+          value={dataToBeAdded.name || ""}
           onChange={handleForm}
         />
         <label>tax-id:</label>
         <input
           type="text"
           name="taxId"
-          value={dataToBeAdded.taxId}
+          value={dataToBeAdded.taxId || ""}
           onChange={handleForm}
         />
         <h2>Address</h2>
@@ -91,21 +131,21 @@ const HandleCustomerForm = () => {
           <input
             type="text"
             name="address.street"
-            value={dataToBeAdded.address.street}
+            value={dataToBeAdded.address.street || ""}
             onChange={handleForm}
           />
           <label className="label-addCustomer">number:</label>
           <input
             type="text"
             name="address.number"
-            value={dataToBeAdded.address.number}
+            value={dataToBeAdded.address.number || ""}
             onChange={handleForm}
           />
           <label className="label-addCustomer">code:</label>
           <input
             type="text"
             name="address.postCode"
-            value={dataToBeAdded.address.postCode}
+            value={dataToBeAdded.address.postCode || ""}
             onChange={handleForm}
           />
         </div>
@@ -114,6 +154,7 @@ const HandleCustomerForm = () => {
           className="btn"
           onClick={(e) => {
             e.preventDefault();
+            setTriggerClick(!triggerClick);
             switch (isPassed) {
               case dataToBeAdded.name === "" &&
                 dataToBeAdded.taxId === "" &&
@@ -182,16 +223,19 @@ const HandleCustomerForm = () => {
                   ...prev,
                   status: true,
                   color: "green",
-                  message: " Successfully added",
+                  message:
+                    rawPath[1] === "edit"
+                      ? " Successfully edited"
+                      : " Successfully added",
                 }));
 
-                AddCustomer();
+                rawPath[1] === "edit" ? editCustomer(id) : addCustomer();
                 setIsPassed(true);
                 break;
             }
           }}
         >
-          Submit
+          {rawPath[1] === "edit" ? "Save" : "Submit"}
         </button>
       </form>
     </div>

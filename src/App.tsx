@@ -23,7 +23,24 @@ function App() {
               />
             }
           />
-          <Route path="add" element={<HandleCustomerForm />} />
+          <Route
+            path="add"
+            element={
+              <HandleCustomerForm
+                triggerClick={triggerClick}
+                setTriggerClick={setTriggerClick}
+              />
+            }
+          />
+          <Route
+            path="edit/:id"
+            element={
+              <HandleCustomerForm
+                triggerClick={triggerClick}
+                setTriggerClick={setTriggerClick}
+              />
+            }
+          />
           <Route
             path="customer/:id"
             element={
@@ -33,6 +50,7 @@ function App() {
               />
             }
           />
+
           <Route path="actions/:id" element={<HandleActionForm />} />
           <Route path="action/edit/:id" element={<HandleActionForm />} />
         </Route>
