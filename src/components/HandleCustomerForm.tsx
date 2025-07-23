@@ -3,13 +3,6 @@ import "../style/main.scss";
 import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
-  const [isPassed, setIsPassed] = useState(true);
-  const [message, setMessage] = useState({
-    status: false,
-    message: "",
-    color: "",
-  });
-
   const location = useLocation();
   const rawPath = location.pathname.split("/");
   console.log(rawPath);
@@ -60,7 +53,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
       console.log(error);
       setMessage((prev) => ({
         ...prev,
-        message: ` Something Went wrong ${error}`,
+        message: { ...prev.message, general: ` Something Went wrong ${error}` },
       }));
     }
   };
@@ -102,14 +95,14 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   return (
     <div className="main">
       <form className="form-addCustomer">
-        {message.status ? (
+        {/* {message.status ? (
           <div className="message" style={{ backgroundColor: message.color }}>
             <h1>{message.color === "red" ? "Error" : "Message"}</h1>{" "}
             <p> {message.message}</p>
           </div>
         ) : (
           ""
-        )}
+        )} */}
         {rawPath[1] === "edit" ? <h1>Edit Customer</h1> : <h1>Add Customer</h1>}
         <label className="label-addCustomer">Name:</label>
         <input
@@ -118,13 +111,15 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
           value={dataToBeAdded.name || ""}
           onChange={handleForm}
         />
-        <label>tax-id:</label>
+        <p className="message-field"> {message.message.name}</p>
+        <label className="label-addCustomer">tax-id:</label>
         <input
           type="text"
           name="taxId"
           value={dataToBeAdded.taxId || ""}
           onChange={handleForm}
         />
+        <p className="message-field"> {message.message.taxId}</p>
         <h2>Address</h2>
         <div className="address">
           <label className="label-addCustomer">street:</label>
@@ -134,6 +129,8 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
             value={dataToBeAdded.address.street || ""}
             onChange={handleForm}
           />
+          <p className="message-field"> {message.message.street}</p>
+
           <label className="label-addCustomer">number:</label>
           <input
             type="text"
@@ -141,6 +138,8 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
             value={dataToBeAdded.address.number || ""}
             onChange={handleForm}
           />
+          <p className="message-field"> {message.message.number}</p>
+
           <label className="label-addCustomer">code:</label>
           <input
             type="text"
@@ -148,6 +147,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
             value={dataToBeAdded.address.postCode || ""}
             onChange={handleForm}
           />
+          <p className="message-field"> {message.message.number}</p>
         </div>
         <br /> <br />
         <button
@@ -155,84 +155,21 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
           onClick={(e) => {
             e.preventDefault();
             setTriggerClick(!triggerClick);
-            switch (isPassed) {
-              case dataToBeAdded.name === "" &&
-                dataToBeAdded.taxId === "" &&
-                dataToBeAdded.address.street === "" &&
-                dataToBeAdded.address.number === "" &&
-                dataToBeAdded.address.postCode === "":
-                setMessage((prev) => ({
-                  ...prev,
-                  status: true,
-                  message:
-                    "None of the field is completed, it is impossible to submit",
-                  color: "red",
-                }));
-                setIsPassed(true);
-                break;
-              case dataToBeAdded.name === "":
-                setMessage((prev) => ({
-                  ...prev,
-                  status: true,
-                  message: "The name field should not be Empty",
-                  color: "red",
-                }));
-                setIsPassed(true);
-                break;
-              case dataToBeAdded.taxId === "" || null:
-                setMessage((prev) => ({
-                  ...prev,
-                  status: true,
-                  message: "The tax Id field should not be Empty",
-                  color: "red",
-                }));
-                setIsPassed(true);
-                break;
 
-              case dataToBeAdded.address.street === "":
-                setMessage((prev) => ({
-                  ...prev,
-                  status: true,
-                  message: "The street field is empty kindly fill it",
-                  color: "red",
-                }));
-                setIsPassed(true);
-                break;
-              case dataToBeAdded.address.postCode === "":
-                setMessage((prev) => ({
-                  ...prev,
-
-                  message: "The post field is empty kindly fill it",
-                  color: "red",
-                }));
-                setIsPassed(true);
-                break;
-
-              case dataToBeAdded.address.number === "":
-                setMessage((prev) => ({
-                  ...prev,
-                  status: true,
-                  message: "what is the number of your apartement ?",
-                  color: "red",
-                }));
-                setIsPassed(true);
-                break;
-
-              default:
-                setMessage((prev) => ({
-                  ...prev,
-                  status: true,
-                  color: "green",
-                  message:
-                    rawPath[1] === "edit"
-                      ? " Successfully edited"
-                      : " Successfully added",
-                }));
-
-                rawPath[1] === "edit" ? editCustomer(id) : addCustomer();
-                setIsPassed(true);
-                break;
-            }
+            setMessage((prev) => ({
+              ...prev,
+              status: true,
+              color: "green",
+              message: {
+                ...prev.message,
+                general:
+                  rawPath[1] === "edit"
+                    ? " Successfully edited"
+                    : " Successfully added",
+              },
+            }));
+            rawPath[1] === "edit" ? editCustomer(id) : addCustomer();
+            setIsPassed(true);
           }}
         >
           {rawPath[1] === "edit" ? "Save" : "Submit"}

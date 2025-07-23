@@ -4,7 +4,11 @@ const Nav = () => {
   return (
     <div className="main-nav">
       <div>
-        <h1>CRM system</h1>
+        <h1>
+          <Link className="link" to="/">
+            CRM system
+          </Link>
+        </h1>
       </div>
       <ul>
         <li>
