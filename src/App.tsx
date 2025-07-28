@@ -7,19 +7,32 @@ import SingleCustomer from "./components/SingleCustomer";
 import HandleCustomerForm from "./components/HandleCustomerForm";
 import HandleActionForm from "./components/HandleActionForm";
 import { useState } from "react";
+import ConfirmationMessage from "./components/ConfirmationMessage";
+import Pagination from "./components/PaginationComponent";
+import PaginationComponent from "./components/PaginationComponent";
 
 function App() {
   const [triggerClick, setTriggerClick] = useState(false);
+
   return (
     <>
       <Routes>
         <Route path="/" element={<Home />}>
           <Route
-            path=""
+            path={`/customers`}
             element={
               <ListCustomers
                 triggerClick={triggerClick}
                 setTriggerClick={setTriggerClick}
+              />
+            }
+          />
+          <Route
+            path="delete/:id"
+            element={
+              <ConfirmationMessage
+                setTriggerClick={setTriggerClick}
+                triggerClick={triggerClick}
               />
             }
           />
@@ -54,6 +67,7 @@ function App() {
           <Route path="actions/:id" element={<HandleActionForm />} />
           <Route path="action/edit/:id" element={<HandleActionForm />} />
         </Route>
+        <Route path="/test" element={<PaginationComponent />} />
       </Routes>
     </>
   );

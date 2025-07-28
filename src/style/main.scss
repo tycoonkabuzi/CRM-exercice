@@ -39,6 +39,7 @@ body {
 .main {
   margin: auto;
   width: 80%;
+  position: relative;
   h1 {
     text-align: center;
   }
@@ -150,7 +151,69 @@ body {
   height: 40px;
   color: white;
   border: none;
+  &:hover {
+    background-color: rgb(45, 111, 158);
+  }
+}
+.gray-btn {
+  background-color: gray;
+}
+.red-btn {
+  background-color: red;
 }
 .errorInput {
   border: 1px solid red;
+}
+.main-message {
+  z-index: 999;
+  position: fixed; /* changed from absolute */
+  top: 0;
+  left: 0;
+  width: 100vw; /* fill full width */
+  height: 100vh; /* fill full height */
+  padding-top: 100px;
+  box-sizing: border-box;
+  background-color: rgba(109, 109, 109, 0.912);
+  display: flex;
+  justify-content: center;
+  align-items: start; /* or center if you want it vertically centered */
+
+  &--container {
+    width: 30%;
+    background-color: rgb(231, 231, 231);
+    padding: 10px 10px 50px 10px;
+    box-sizing: border-box;
+    animation: messageAnimation 0.3s ease-in-out;
+
+    h1 {
+      text-align: center;
+    }
+    p {
+      display: block;
+      width: 60%;
+      text-align: center;
+      margin: auto;
+    }
+    &--buttons {
+      width: 60%;
+      display: flex;
+      justify-content: space-between;
+      margin: auto;
+    }
+  }
+}
+.main-pagination {
+  margin-top: 200px;
+  width: 100%;
+  justify-content: space-around;
+  ul {
+    margin: auto;
+    width: 20%;
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    li {
+      gap: 5%;
+    }
+  }
 }

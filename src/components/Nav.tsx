@@ -5,14 +5,14 @@ const Nav = () => {
     <div className="main-nav">
       <div>
         <h1>
-          <Link className="link" to="/">
+          <Link className="link" to="/customers">
             CRM system
           </Link>
         </h1>
       </div>
       <ul>
         <li>
-          <Link className="link" to="/">
+          <Link className="link" to="/customers">
             Home
           </Link>
         </li>

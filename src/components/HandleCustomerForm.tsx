@@ -129,17 +129,13 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
         )} */}
         {rawPath[1] === "edit" ? <h1>Edit Customer</h1> : <h1>Add Customer</h1>}
         <label className="label-addCustomer">Name:</label>
-        {errors.name && (
-          <>
-            <input
-              type="text"
-              name="name"
-              value={dataToBeAdded.name || ""}
-              onChange={handleChange}
-            />
-            <p className="message-field"> {errors.name}</p>
-          </>
-        )}
+        <input
+          type="text"
+          name="name"
+          value={dataToBeAdded.name || ""}
+          onChange={handleChange}
+        />
+        <p className="message-field"> {errors.name}</p>
         <label className="label-addCustomer">tax-id:</label>
         <input
           type="text"

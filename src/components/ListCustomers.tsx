@@ -1,16 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import PaginationComponent from "./PaginationComponent";
 
-const ListCustomers = ({ triggerClick, setTriggerClick }) => {
+const ListCustomers = ({ triggerClick }) => {
   const [customersData, setCustomersData] = useState([]);
+  const [searchParams] = useSearchParams();
+  const [pageNumber, setPageNumber] = useState(1);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const customers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/customers?page=2&limit=10`
+          `http://localhost:8080/customers?page=${pageNumber}&limit=10`
         );
         console.log(response.data);
         setCustomersData(response.data);
@@ -20,16 +24,12 @@ const ListCustomers = ({ triggerClick, setTriggerClick }) => {
     };
 
     customers();
-  }, [triggerClick]);
+  }, [triggerClick, pageNumber]);
 
-  const deleteCustomer = (id) => {
-    try {
-      axios.delete(`http://localhost:8080/customers/${id}`);
-      setTriggerClick(!triggerClick);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    const pageFromURL = Number(searchParams.get("page")) || 1;
+    setPageNumber(pageFromURL);
+  }, [searchParams]);
   return (
     <div className="main">
       {customersData.length !== 0 ? (
@@ -53,7 +53,11 @@ const ListCustomers = ({ triggerClick, setTriggerClick }) => {
                 <button onClick={() => navigate(`edit/${customer._id}`)}>
                   Edit
                 </button>
-                <button onClick={() => deleteCustomer(customer._id)}>
+                <button
+                  onClick={() => {
+                    navigate(`/delete/${customer._id}`);
+                  }}
+                >
                   Delete
                 </button>
               </div>
@@ -63,6 +67,7 @@ const ListCustomers = ({ triggerClick, setTriggerClick }) => {
       ) : (
         <p style={{ textAlign: "center" }}> There is currently no customer</p>
       )}
+      <PaginationComponent numberOfPage={customersData.pages} />
     </div>
   );
 };
