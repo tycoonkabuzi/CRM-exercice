@@ -5,8 +5,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   const location = useLocation();
   const rawPath = location.pathname.split("/");
-  console.log(rawPath);
-
   const [dataToBeAdded, setDataToBeAdded] = useState({
     address: {
       street: "",
@@ -16,11 +14,41 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
     name: "",
     taxId: "",
   });
+  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
 
-  const { id } = useParams();
-  const handleForm = (e) => {
+  const { idParam } = useParams();
+
+  const validation = () => {
+    const newError = {};
+    if (!dataToBeAdded.name) newError.name = "Name is required";
+    if (!dataToBeAdded.taxId) newError.taxId = "TaxId is required";
+    if (
+      dataToBeAdded.taxId.trim().length < 11 ||
+      dataToBeAdded.taxId.trim().length > 11
+    )
+      newError.taxId = "TaxId must be of 11 digits";
+    if (!dataToBeAdded.address.street) newError.street = "Street is required";
+    if (!dataToBeAdded.address.number) newError.number = "number is required";
+    if (!dataToBeAdded.address.postCode)
+      newError.postCode = "Post code is required";
+    return newError;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationError = validation();
+    if (Object.keys(validationError).length > 0) {
+      setErrors(validationError);
+    } else {
+      setErrors({});
+      setTriggerClick(!triggerClick);
+      rawPath[1] === "edit" ? editCustomer(idParam) : addCustomer();
+    }
+  };
+  console.log(errors);
+  const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
@@ -51,10 +79,6 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
       navigate("/");
     } catch (error) {
       console.log(error);
-      setMessage((prev) => ({
-        ...prev,
-        message: { ...prev.message, general: ` Something Went wrong ${error}` },
-      }));
     }
   };
 
@@ -62,7 +86,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
     const getSingleCustomer = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/customers/${id}`
+          `http://localhost:8080/customers/${idParam}`
         );
         const data = response.data;
         if (data) {
@@ -94,7 +118,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   };
   return (
     <div className="main">
-      <form className="form-addCustomer">
+      <form className="form-addCustomer" onSubmit={handleSubmit}>
         {/* {message.status ? (
           <div className="message" style={{ backgroundColor: message.color }}>
             <h1>{message.color === "red" ? "Error" : "Message"}</h1>{" "}
@@ -105,21 +129,25 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
         )} */}
         {rawPath[1] === "edit" ? <h1>Edit Customer</h1> : <h1>Add Customer</h1>}
         <label className="label-addCustomer">Name:</label>
-        <input
-          type="text"
-          name="name"
-          value={dataToBeAdded.name || ""}
-          onChange={handleForm}
-        />
-        <p className="message-field"> {message.message.name}</p>
+        {errors.name && (
+          <>
+            <input
+              type="text"
+              name="name"
+              value={dataToBeAdded.name || ""}
+              onChange={handleChange}
+            />
+            <p className="message-field"> {errors.name}</p>
+          </>
+        )}
         <label className="label-addCustomer">tax-id:</label>
         <input
           type="text"
           name="taxId"
           value={dataToBeAdded.taxId || ""}
-          onChange={handleForm}
+          onChange={handleChange}
         />
-        <p className="message-field"> {message.message.taxId}</p>
+        <p className="message-field">{errors.taxId && errors.taxId} </p>
         <h2>Address</h2>
         <div className="address">
           <label className="label-addCustomer">street:</label>
@@ -127,51 +155,30 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
             type="text"
             name="address.street"
             value={dataToBeAdded.address.street || ""}
-            onChange={handleForm}
+            onChange={handleChange}
           />
-          <p className="message-field"> {message.message.street}</p>
+          <p className="message-field">{errors.street && errors.street} </p>
 
           <label className="label-addCustomer">number:</label>
           <input
             type="text"
             name="address.number"
             value={dataToBeAdded.address.number || ""}
-            onChange={handleForm}
+            onChange={handleChange}
           />
-          <p className="message-field"> {message.message.number}</p>
+          <p className="message-field">{errors.number && errors.number} </p>
 
           <label className="label-addCustomer">code:</label>
           <input
             type="text"
             name="address.postCode"
             value={dataToBeAdded.address.postCode || ""}
-            onChange={handleForm}
+            onChange={handleChange}
           />
-          <p className="message-field"> {message.message.number}</p>
+          <p className="message-field">{errors.postCode && errors.postCode} </p>
         </div>
         <br /> <br />
-        <button
-          className="btn"
-          onClick={(e) => {
-            e.preventDefault();
-            setTriggerClick(!triggerClick);
-
-            setMessage((prev) => ({
-              ...prev,
-              status: true,
-              color: "green",
-              message: {
-                ...prev.message,
-                general:
-                  rawPath[1] === "edit"
-                    ? " Successfully edited"
-                    : " Successfully added",
-              },
-            }));
-            rawPath[1] === "edit" ? editCustomer(id) : addCustomer();
-            setIsPassed(true);
-          }}
-        >
+        <button type="submit" className="btn">
           {rawPath[1] === "edit" ? "Save" : "Submit"}
         </button>
       </form>
