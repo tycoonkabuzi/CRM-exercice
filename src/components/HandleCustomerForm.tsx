@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   const location = useLocation();
   const rawPath = location.pathname.split("/");
+  console.log(rawPath);
   const [dataToBeAdded, setDataToBeAdded] = useState({
     address: {
       street: "",
@@ -18,7 +19,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
 
   const navigate = useNavigate();
 
-  const { idParam } = useParams();
+  const { id } = useParams();
 
   const validation = () => {
     const newError = {};
@@ -44,7 +45,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
     } else {
       setErrors({});
       setTriggerClick(!triggerClick);
-      rawPath[1] === "edit" ? editCustomer(idParam) : addCustomer();
+      rawPath[2] === "edit" ? editCustomer(id) : addCustomer();
     }
   };
   console.log(errors);
@@ -76,7 +77,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
         name: "",
         taxId: "",
       });
-      navigate("/");
+      navigate("/customers");
     } catch (error) {
       console.log(error);
     }
@@ -86,7 +87,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
     const getSingleCustomer = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/customers/${idParam}`
+          `http://localhost:8080/customers/${id}`
         );
         const data = response.data;
         if (data) {
@@ -111,7 +112,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   const editCustomer = (customerId) => {
     try {
       axios.put(`http://localhost:8080/customers/${customerId}`, dataToBeAdded);
-      navigate("/");
+      navigate("/customers");
     } catch (error) {
       console.log(error);
     }
@@ -127,7 +128,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
         ) : (
           ""
         )} */}
-        {rawPath[1] === "edit" ? <h1>Edit Customer</h1> : <h1>Add Customer</h1>}
+        {rawPath[2] === "edit" ? <h1>Edit Customer</h1> : <h1>Add Customer</h1>}
         <label className="label-addCustomer">Name:</label>
         <input
           type="text"
@@ -175,7 +176,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
         </div>
         <br /> <br />
         <button type="submit" className="btn">
-          {rawPath[1] === "edit" ? "Save" : "Submit"}
+          {rawPath[2] === "edit" ? "Save" : "Submit"}
         </button>
       </form>
     </div>

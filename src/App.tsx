@@ -8,7 +8,7 @@ import HandleCustomerForm from "./components/HandleCustomerForm";
 import HandleActionForm from "./components/HandleActionForm";
 import { useState } from "react";
 import ConfirmationMessage from "./components/ConfirmationMessage";
-import Pagination from "./components/PaginationComponent";
+
 import PaginationComponent from "./components/PaginationComponent";
 
 function App() {
@@ -46,7 +46,7 @@ function App() {
             }
           />
           <Route
-            path="edit/:id"
+            path="customers/edit/:id"
             element={
               <HandleCustomerForm
                 triggerClick={triggerClick}
@@ -55,7 +55,7 @@ function App() {
             }
           />
           <Route
-            path="customer/:id"
+            path="customers/customer/:id"
             element={
               <SingleCustomer
                 triggerClick={triggerClick}

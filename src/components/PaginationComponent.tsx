@@ -19,7 +19,7 @@ function PaginationComponent({ numberOfPage }) {
         )}
         {arrayPages.map((page) => (
           <li>
-            <a onClick={() => navigate(`/customers?page=${page}&limit=10`)}>
+            <a onClick={() => navigate(`/customers?page=${page + 1}&limit=10`)}>
               {page + 1}
             </a>
           </li>
