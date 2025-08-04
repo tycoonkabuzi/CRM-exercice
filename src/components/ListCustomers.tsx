@@ -2,11 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PaginationComponent from "./PaginationComponent";
+import HandleSearch from "./HandleSearch";
 
 const ListCustomers = ({ triggerClick }) => {
   const [customersData, setCustomersData] = useState([]);
   const [searchParams] = useSearchParams();
   const [pageNumber, setPageNumber] = useState(1);
+  const [triggerSearch, setTriggerSearch] = useState(false);
 
   const navigate = useNavigate();
 
@@ -30,11 +32,18 @@ const ListCustomers = ({ triggerClick }) => {
     const pageFromURL = Number(searchParams.get("page")) || 1;
     setPageNumber(pageFromURL);
   }, [searchParams]);
+
   return (
     <div className="main">
       {customersData.length !== 0 ? (
         <>
-          <h1>List customers</h1>
+          <div className="title-listCustomer">
+            <h1>List customers</h1>
+            <HandleSearch
+              setTriggerSearch={setTriggerSearch}
+              triggerSearch={triggerSearch}
+            />
+          </div>
 
           <ul>
             {customersData.data?.map((customer) => (

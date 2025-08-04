@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify/icons-mdi": "^1.2.48",
+    "@iconify/react": "^6.0.0",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "react": "^19.1.0",
