@@ -1,15 +1,16 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
 import SearchResults from "./SearchResults";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 const HandleSearch = ({ triggerSearch, setTriggerSearch }) => {
   const [customersData, setCustomersData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [resultData, setResultData] = useState([]);
   useEffect(() => {
     const customers = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/customers`);
+        const response = await axios.get(`http://localhost:8080/customers/all`);
         console.log(response.data);
         setCustomersData(response.data);
       } catch (error) {
@@ -19,15 +20,23 @@ const HandleSearch = ({ triggerSearch, setTriggerSearch }) => {
 
     customers();
   }, []);
+
+  useEffect(() => {
+    if (!triggerSearch) {
+      setSearchValue("");
+      setResultData([]);
+    }
+  }, [triggerSearch]);
+
   const handleSearch = (e) => {
     const value = e.target.value;
-    const filtered = customersData.data?.filter((element) =>
-      element.name.toLowerCase().includes(value)
+    setSearchValue(value);
+    const filtered = customersData?.filter((element) =>
+      element.name.toLowerCase().includes(value.toLowerCase())
     );
     setResultData(filtered);
   };
 
-  console.log(resultData);
   return (
     <>
       <div className="search-wrapper">
@@ -37,9 +46,13 @@ const HandleSearch = ({ triggerSearch, setTriggerSearch }) => {
           className={`search-input ${triggerSearch ? "expand" : ""}`}
           placeholder="Search..."
           onChange={handleSearch}
+          value={searchValue}
         />
         <Icon
-          onClick={() => setTriggerSearch(true)}
+          onClick={() => {
+            console.log("Search icon clicked!");
+            setTriggerSearch(true);
+          }}
           className={`search-icon ${
             triggerSearch === true ? "turn-to-black" : ""
           }`}
@@ -53,7 +66,9 @@ const HandleSearch = ({ triggerSearch, setTriggerSearch }) => {
           icon={"ic:outline-close"}
           width="24"
           height="24"
-          onClick={() => setTriggerSearch(false)}
+          onClick={() => {
+            setTriggerSearch(false);
+          }}
         />
 
         {resultData.length !== 0 && triggerSearch ? (

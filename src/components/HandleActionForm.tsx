@@ -50,7 +50,7 @@ const HandleActionForm = () => {
     const dataToSend = { ...actionToBeAdded, customer: params.id };
     try {
       await axios.post(`http://localhost:8080/actions`, dataToSend);
-      navigate(`/customer/${params.id}`);
+      navigate(`/customers/customer/${params.id}`);
     } catch (error) {
       console.log(error);
     }
