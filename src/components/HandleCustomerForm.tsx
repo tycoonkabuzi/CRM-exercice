@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "../style/main.scss";
 import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+
 const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   const location = useLocation();
   const rawPath = location.pathname.split("/");
@@ -14,6 +15,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
     },
     name: "",
     taxId: "",
+    profilePicture: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -52,21 +54,42 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+    const files = e.target.files;
 
     setDataToBeAdded((prev) => {
       const key = name.split("."); // we split the name into two elements of an array it will look like eg: ["address","street"]
       if (key.length == 1) {
         // here we create a condition saying, for every name which does not have a dot or for every single name which is single just put the data directly
-        return { ...prev, [name]: value };
+
+        if (name === "profilePicture") {
+          return { ...prev, [name]: files[0] };
+        } else {
+          return { ...prev, [name]: value };
+        }
       }
+
       const [parent, child] = key; // here we distructure just to wave the first part and the second part of the name.
       return { ...prev, [parent]: { ...prev[parent], [child]: value } }; // here we create a logic, saying that the parent will be created as an object name.
     });
   };
+  console.log(dataToBeAdded);
 
   const addCustomer = async () => {
     try {
-      await axios.post("http://localhost:8080/customers", dataToBeAdded);
+      const data = new FormData();
+
+      data.append("name", dataToBeAdded.name);
+      data.append("taxId", dataToBeAdded.taxId);
+      data.append("street", dataToBeAdded.address.street);
+      data.append("number", dataToBeAdded.address.number);
+      data.append("postCode", dataToBeAdded.address.postCode);
+
+      if (dataToBeAdded.profilePicture)
+        data.append("profilePicture", dataToBeAdded.profilePicture);
+
+      await axios.post("http://localhost:8080/customers", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       setDataToBeAdded({
         address: {
@@ -76,13 +99,13 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
         },
         name: "",
         taxId: "",
+        profilePicture: "",
       });
       navigate("/customers");
     } catch (error) {
       console.log(error);
     }
   };
-
   useEffect(() => {
     const getSingleCustomer = async () => {
       try {
@@ -100,6 +123,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
             },
             name: data.name,
             taxId: data.taxId,
+            profilePicture: data.profilePicture,
           }));
         }
       } catch (error) {
@@ -174,6 +198,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
           />
           <p className="message-field">{errors.postCode && errors.postCode} </p>
         </div>
+        <input type="file" name="profilePicture" onChange={handleChange} />
         <br /> <br />
         <button type="submit" className="btn">
           {rawPath[2] === "edit" ? "Save" : "Submit"}

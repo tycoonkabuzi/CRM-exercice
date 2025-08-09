@@ -49,28 +49,36 @@ const SingleCustomer = ({ triggerClick, setTriggerClick }) => {
   };
   return (
     <div className="main">
-      <div>
-        <h1>
-          {data.name}(Tax-Id: {data.taxId})
-        </h1>
-        <div style={{ width: "50%" }}>
-          <h2>Address</h2>
-          <ul style={{ width: "100%" }}>
-            <li>street: {data.address.street}</li>
-            <li>Number: {data.address.number}</li>
-            <li>post-code: {data.address.postCode}</li>
-          </ul>
-        </div>
+      <div className="container-entire-profile">
+        <div>
+          <h1>
+            {data.name}(Tax-Id: {data.taxId})
+          </h1>
+          <div style={{ width: "50%" }}>
+            <h2>Address</h2>
+            <ul style={{ width: "100%" }}>
+              <li>street: {data.address.street}</li>
+              <li>Number: {data.address.number}</li>
+              <li>post-code: {data.address.postCode}</li>
+            </ul>
+          </div>
 
-        <br />
-        <button
-          onClick={() => {
-            navigate(`/actions/${data._id}`);
-          }}
-          className="btn"
-        >
-          Add Action
-        </button>
+          <br />
+          <button
+            onClick={() => {
+              navigate(`/actions/${data._id}`);
+            }}
+            className="btn"
+          >
+            Add Action
+          </button>
+        </div>
+        <div className="profile-container">
+          <img
+            src={`http://localhost:8080/uploadProfile/${data.profilePicture}`}
+            alt=""
+          />
+        </div>
       </div>
 
       <h2>Actions</h2>
