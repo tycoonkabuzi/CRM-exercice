@@ -10,6 +10,8 @@ import { useState } from "react";
 import ConfirmationMessage from "./components/ConfirmationMessage";
 
 import PaginationComponent from "./components/PaginationComponent";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
 function App() {
   const [triggerClick, setTriggerClick] = useState(false);
@@ -67,7 +69,8 @@ function App() {
           <Route path="actions/:id" element={<HandleActionForm />} />
           <Route path="action/edit/:id" element={<HandleActionForm />} />
         </Route>
-        <Route path="/test" element={<PaginationComponent />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   );
