@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import api from "../middleware/api";
 
 const SingleCustomer = ({ triggerClick, setTriggerClick }) => {
   const [data, setData] = useState();
@@ -11,9 +12,7 @@ const SingleCustomer = ({ triggerClick, setTriggerClick }) => {
   useEffect(() => {
     const getSingleCustomer = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/customers/${id}`
-        );
+        const response = await api.get(`/customers/${id}`);
 
         setData(response.data);
       } catch (error) {
@@ -30,7 +29,9 @@ const SingleCustomer = ({ triggerClick, setTriggerClick }) => {
 
   const deleteAction = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/actions/${id}`);
+      await api.delete(`/actions/${id}`, {
+        withCredentials: true,
+      });
     } catch (error) {
       console.log("something went wrong, impossible to delete", error);
     }

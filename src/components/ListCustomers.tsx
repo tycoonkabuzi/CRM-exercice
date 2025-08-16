@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PaginationComponent from "./PaginationComponent";
 import HandleSearch from "./HandleSearch";
+import api from "../middleware/api";
 
 const ListCustomers = ({ triggerClick }) => {
   const [customersData, setCustomersData] = useState([]);
@@ -15,10 +15,11 @@ const ListCustomers = ({ triggerClick }) => {
   useEffect(() => {
     const customers = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/customers?page=${pageNumber}&limit=10`
+        const response = await api.get(
+          `/customers?page=${pageNumber}&limit=10`,
+          { withCredentials: true }
         );
-        console.log(response.data);
+
         setCustomersData(response.data);
       } catch (error) {
         console.log(error);

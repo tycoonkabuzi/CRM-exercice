@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "../style/main.scss";
-import axios from "axios";
+
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import api from "../middleware/api";
 
 const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   const location = useLocation();
@@ -87,7 +88,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
       if (dataToBeAdded.profilePicture)
         data.append("profilePicture", dataToBeAdded.profilePicture);
 
-      await axios.post("http://localhost:8080/customers", data, {
+      await api.post("/customers", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -109,9 +110,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
   useEffect(() => {
     const getSingleCustomer = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/customers/${id}`
-        );
+        const response = await api.get(`/customers/${id}`);
         const data = response.data;
         if (data) {
           setDataToBeAdded((prev) => ({
@@ -135,7 +134,7 @@ const HandleCustomerForm = ({ triggerClick, setTriggerClick }) => {
 
   const editCustomer = (customerId) => {
     try {
-      axios.put(`http://localhost:8080/customers/${customerId}`, dataToBeAdded);
+      api.put(`/customers/${customerId}`, dataToBeAdded);
       navigate("/customers");
     } catch (error) {
       console.log(error);

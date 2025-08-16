@@ -371,3 +371,12 @@ body {
     }
   }
 }
+.logout {
+  color: rgb(43, 183, 248);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  & :hover {
+    color: rgba(1, 20, 25, 0.434);
+  }
+}

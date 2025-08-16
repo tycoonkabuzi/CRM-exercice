@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import api from "../middleware/api";
 
 const HandleActionForm = () => {
   const location = useLocation();
@@ -25,9 +25,7 @@ const HandleActionForm = () => {
   useEffect(() => {
     const getSingleAction = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/actions/${singleActionId}`
-        );
+        const response = await api.get(`/actions/${singleActionId}`);
         const data = response.data;
 
         if (data) {
@@ -49,7 +47,7 @@ const HandleActionForm = () => {
   const addAction = async () => {
     const dataToSend = { ...actionToBeAdded, customer: params.id };
     try {
-      await axios.post(`http://localhost:8080/actions`, dataToSend);
+      await api.post(`/actions`, dataToSend);
       navigate(`/customers/customer/${params.id}`);
     } catch (error) {
       console.log(error);
@@ -60,10 +58,7 @@ const HandleActionForm = () => {
     try {
       const dataToSend = { ...actionToBeAdded };
       console.log(dataToSend);
-      await axios.put(
-        `http://localhost:8080/actions/${singleActionId}`,
-        dataToSend
-      );
+      await api.put(`/actions/${singleActionId}`, dataToSend);
       await navigate(`/customer/${actionToBeAdded.customer}`);
     } catch (error) {
       console.log(error);

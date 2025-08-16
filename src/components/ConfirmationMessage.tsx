@@ -1,15 +1,15 @@
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import deleteAudio from "../assets/audio/FaceTime Hang Up (Apple Sound) - Sound Effect for editing.wav";
-const ConfirmationMessage = ({ setTriggerClick, triggerClick }) => {
+import api from "../middleware/api";
+const ConfirmationMessage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const deleteCustomer = async () => {
     const soundDelete = new Audio(deleteAudio);
     try {
-      await axios.delete(`http://localhost:8080/customers/${id}`);
-      navigate("/");
+      await api.delete(`/customers/${id}`);
+      navigate("/customers");
       soundDelete.play();
     } catch (error) {
       console.log(error);
@@ -25,7 +25,10 @@ const ConfirmationMessage = ({ setTriggerClick, triggerClick }) => {
           <button className="btn red-btn" onClick={deleteCustomer}>
             Yes
           </button>
-          <button className="btn gray-btn" onClick={() => navigate("/")}>
+          <button
+            className="btn gray-btn"
+            onClick={() => navigate("/customers")}
+          >
             Cancel
           </button>
         </div>

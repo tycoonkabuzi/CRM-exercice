@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
 import SearchResults from "./SearchResults";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
+import api from "../middleware/api";
 
 const HandleSearch = ({ triggerSearch, setTriggerSearch }) => {
   const [customersData, setCustomersData] = useState([]);
@@ -10,7 +11,7 @@ const HandleSearch = ({ triggerSearch, setTriggerSearch }) => {
   useEffect(() => {
     const customers = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/customers/all`);
+        const response = await api.get(`/customers/all`);
         console.log(response.data);
         setCustomersData(response.data);
       } catch (error) {

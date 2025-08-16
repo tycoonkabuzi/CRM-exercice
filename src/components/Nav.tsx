@@ -1,6 +1,18 @@
-import { Link } from "react-router-dom";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../middleware/api";
 
 const Nav = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    try {
+      api.post("/user/logout");
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="main-nav">
       <div>
@@ -21,8 +33,16 @@ const Nav = () => {
             Add Customer
           </Link>
         </li>
-        <li>Logout</li>
       </ul>
+
+      <div className="logout">
+        Tycoon{" "}
+        <Icon
+          icon="material-symbols-light:logout-sharp"
+          width={"25px"}
+          onClick={handleLogout}
+        ></Icon>
+      </div>
     </div>
   );
 };
