@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../middleware/api";
 
 const Register = () => {
   const [hidePassword, setHidePassword] = useState(false);
@@ -21,8 +22,16 @@ const Register = () => {
   const register = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/user/register", dataToSend);
+      await api.post("/user/register", dataToSend);
       navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getLoggedInUser = async () => {
+    try {
+      await api.get("/users/");
     } catch (error) {
       console.log(error);
     }
@@ -54,6 +63,9 @@ const Register = () => {
         <button className="btn" onClick={register}>
           Sign up
         </button>
+        <p>
+          You have an account ?<Link to="/login"> sign in </Link>
+        </p>
       </form>
     </div>
   );

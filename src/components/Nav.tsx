@@ -1,13 +1,18 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../middleware/api";
+import { useContext } from "react";
+import AuthContext from "../context/authProvider";
 
 const Nav = () => {
   const navigate = useNavigate();
+
+  const { logout } = useContext(AuthContext);
   const handleLogout = () => {
     try {
       api.post("/user/logout");
       navigate("/login");
+      logout();
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +41,6 @@ const Nav = () => {
       </ul>
 
       <div className="logout">
-        Tycoon{" "}
         <Icon
           icon="material-symbols-light:logout-sharp"
           width={"25px"}

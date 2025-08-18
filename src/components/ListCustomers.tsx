@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PaginationComponent from "./PaginationComponent";
 import HandleSearch from "./HandleSearch";
 import api from "../middleware/api";
+import AuthContext from "../context/authProvider";
 
 const ListCustomers = ({ triggerClick }) => {
   const [customersData, setCustomersData] = useState([]);
   const [searchParams] = useSearchParams();
   const [pageNumber, setPageNumber] = useState(1);
   const [triggerSearch, setTriggerSearch] = useState(false);
-
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +39,13 @@ const ListCustomers = ({ triggerClick }) => {
     <div className="main">
       {customersData.length !== 0 ? (
         <>
+          <br /> <br />
+          <h2>
+            <span style={{ fontWeight: "100", fontStyle: "italic" }}>
+              Good Morning{" "}
+            </span>
+            {user}
+          </h2>
           <div className="title-listCustomer">
             <h1>List customers</h1>
             <HandleSearch
@@ -45,7 +53,6 @@ const ListCustomers = ({ triggerClick }) => {
               triggerSearch={triggerSearch}
             />
           </div>
-
           <ul>
             {customersData.data?.map((customer) => (
               <div

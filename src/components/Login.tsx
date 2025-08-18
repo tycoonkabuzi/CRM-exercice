@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../context/authProvider";
 
 const Login = () => {
   const [hidePassword, setHidePassword] = useState(false);
@@ -17,6 +18,8 @@ const Login = () => {
     setDataToSend((prev) => ({ ...prev, [name]: value }));
   };
 
+  const { login } = useContext(AuthContext);
+
   const sendForLogin = async (e) => {
     e.preventDefault();
     try {
@@ -27,7 +30,9 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(res.data);
+      console.log(res);
+      login(res.data.user.name);
+
       navigate("/customers");
     } catch (error) {
       console.log(error);
@@ -59,7 +64,6 @@ const Login = () => {
             Submit
           </button>
           <p>
-            {" "}
             You don't have an account ?{" "}
             <Link to="/register">create an account </Link>
           </p>
